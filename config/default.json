@@ -1,0 +1,25 @@
+{
+  "Settings": {
+    "Recorder": {
+      "recordingsPath": "data/recordings",
+      "storagePath": "C:/SunriseStorage",
+      "screenshotPath": "C:/Images/",
+      "settingsPath": "data/settings/settings-recorder-allcams.xml",
+      "duration": 3600,
+      "offset": 1800
+    },
+    "Player": {
+      "windowWidth": 1920,
+      "windowHeight": 1080,
+      "windowX": 0,
+      "windowY": 0,
+      "videoWidth": 1920,
+      "videoHeight": 1080,
+      "videoX": 0,
+      "videoY": 0
+    },
+    "Timezone": {
+      "offset": 0
+    }
+  }
+}

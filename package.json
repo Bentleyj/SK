@@ -1,0 +1,32 @@
+{
+  "name": "hellicarstudio-sunrisekingdom-controller",
+  "version": "1.0.0",
+  "description": "PM2 Controller Application for Sunrise Kingdom",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hellicar-Studio/SunriseKingdomController.git"
+  },
+  "author": "Hellicar Studio (James Bentley, Diederick Huijbers)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Hellicar-Studio/SunriseKingdomController/issues"
+  },
+  "homepage": "https://github.com/Hellicar-Studio/SunriseKingdomController#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "config": "^1.30.0",
+    "ejs": "^2.5.9",
+    "express": "^4.16.3",
+    "fs-extra": "^6.0.0",
+    "mkdirp": "^0.5.1",
+    "node-schedule": "^1.3.0",
+    "nodemailer": "^4.6.4",
+    "pm2": "^2.10.3",
+    "screenshot-desktop": "^1.4.2",
+    "sharp": "^0.20.5"
+  }
+}

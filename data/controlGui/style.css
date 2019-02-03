@@ -1,0 +1,331 @@
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+            content: '';
+            content: none;
+          }
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* General */
+/* -------------------------------------------------------- */
+
+body,
+.button,
+li,
+select,
+input {
+  font-family: Tahoma, '-apple-system',  'Helvetica Neue';
+  font-size: 16px;
+}
+
+body {
+  background-color: #ccc;
+}
+
+.no-select {
+  -webkit-touch-callout: none; 
+  -webkit-user-select: none;   
+  -khtml-user-select: none;    
+  -moz-user-select: none;      
+  -ms-user-select: none;       
+  user-select: none;           
+}
+
+#main {
+  padding: 10px;
+}
+
+#save {
+  width: 65px;
+  position: absolute;
+  right: 10px;
+  top: 5px;
+}
+
+/* Sections */
+/* -------------------------------------------------------- */
+
+#sections {
+  overflow: hidden;
+  background-color: rgb(60,60,60);
+  color: white;
+  border-bottom: 1px solid #ccc;
+}
+
+#sections li {
+  float: left;
+  margin-right: 10px;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+#sections li.on {
+  border-bottom: 2px solid #d2ff52;
+}
+
+
+/* Groups */
+/* -------------------------------------------------------- */
+
+#groups {
+  padding: 10px;
+}
+
+ul.group {
+  padding: 10px;
+  background-color: rgb(95, 95, 95);
+  -webkit-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 15px -5px rgba(0,0,0,0.75);
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+}
+
+#groups li:first-child .group {
+  border-bottom: 1px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+#groups li:last-child .group {
+  border-bottom: 1px solid black;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+ul.group li {
+  padding: 5px;
+}
+
+ul.group label {
+  display: inline-block;
+  width: 50%;
+  float: left;
+}
+
+.group-title {
+  color: white;
+}
+
+/* Button */
+/* -------------------------------------------------------- */
+
+.button {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #cccccc), color-stop(1, #919191));
+  background:-moz-linear-gradient(top, #cccccc 5%, #919191 100%);
+  background:-webkit-linear-gradient(top, #cccccc 5%, #919191 100%);
+  background:-o-linear-gradient(top, #cccccc 5%, #919191 100%);
+  background:-ms-linear-gradient(top, #cccccc 5%, #919191 100%);
+  background:linear-gradient(to bottom, #cccccc 5%, #919191 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#cccccc', endColorstr='#919191',GradientType=0);
+  background-color:#cccccc;
+  -moz-border-radius:7px;
+  -webkit-border-radius:7px;
+  border-radius:7px;
+  border:1px solid #404040;
+  display:inline-block;
+  cursor:pointer;
+  color:#000000;
+  font-family:Arial;
+  font-size:15px;
+  text-decoration:none;
+  width: 100%;
+  text-align: center;
+  padding: 5px 0px;
+}
+
+.button:hover {
+  background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #919191), color-stop(1, #cccccc));
+  background:-moz-linear-gradient(top, #919191 5%, #cccccc 100%);
+  background:-webkit-linear-gradient(top, #919191 5%, #cccccc 100%);
+  background:-o-linear-gradient(top, #919191 5%, #cccccc 100%);
+  background:-ms-linear-gradient(top, #919191 5%, #cccccc 100%);
+  background:linear-gradient(to bottom, #919191 5%, #cccccc 100%);
+  filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#919191', endColorstr='#cccccc',GradientType=0);
+  background-color:#919191;
+}
+
+.button:active {
+  position:relative;
+  top:1px;
+}
+
+/* Slider */
+/* -------------------------------------------------------- */
+
+.slider {
+  display: flex;
+  flex-direction: row;
+  border:1px solid #404040;
+  border-radius: 5px;
+  height: 25px;
+  overflow: hidden;
+}
+
+.slider-container {
+  flex: 1.0;
+  align-self: center;
+}
+
+.slider-text-input {
+  width: 100px;
+  height: 25px;
+  padding-right: 5px;
+  border: none;
+  outline: none;
+  background-color: white;
+  text-align: right;
+}
+
+.slider,
+.slider .slider-container,
+.slider .slider-fill {
+  height: 25px;
+}
+
+.slider .slider-container {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+
+  /* Permalink: http://colorzilla.com/gradient-editor/#cccccc+0,eeeeee+100 */
+  background: #cccccc;
+  background: -moz-linear-gradient(top,  #cccccc 0%, #eeeeee 100%); 
+  background: -webkit-linear-gradient(top,  #cccccc 0%,#eeeeee 100%); 
+  background: linear-gradient(to bottom,  #cccccc 0%,#eeeeee 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 ); 
+}
+
+.slider .slider-label {
+  display: block;
+  width: 100%;
+  text-align: right;
+  line-height: 25px;
+  position: absolute;
+  right: 10px;
+  top: 0;
+
+  text-align: left;
+  right: 0;
+  left: 10px;
+}
+
+.slider .slider-fill {
+  /* Permalink: http://colorzilla.com/gradient-editor/#d2ff52+0,91e842+100;Neon */
+  background: #d2ff52;
+  background: -moz-linear-gradient(top,  #d2ff52 0%, #91e842 100%);
+  background: -webkit-linear-gradient(top,  #d2ff52 0%,#91e842 100%);
+  background: linear-gradient(to bottom,  #d2ff52 0%,#91e842 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d2ff52', endColorstr='#91e842',GradientType=0 );
+}
+
+/* Toggle */
+/* -------------------------------------------------------- */
+
+.toggle {
+  cursor: pointer;
+}
+
+.toggle-fill {
+  border: 1px solid black;
+  border-radius: 5px;
+  width: 15px;
+  height: 15px;
+  float: left;
+  margin-right: 10px;
+}
+
+.toggle-on .toggle-fill {
+  /* Permalink: http://colorzilla.com/gradient-editor/#d2ff52+0,91e842+100;Neon */
+  background: #d2ff52;
+  background: -moz-linear-gradient(top,  #d2ff52 0%, #91e842 100%);
+  background: -webkit-linear-gradient(top,  #d2ff52 0%,#91e842 100%);
+  background: linear-gradient(to bottom,  #d2ff52 0%,#91e842 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d2ff52', endColorstr='#91e842',GradientType=0 );
+}
+
+.toggle-off .toggle-fill {
+  /* Permalink: http://colorzilla.com/gradient-editor/#cccccc+0,eeeeee+100 */
+  background: #cccccc;
+  background: -moz-linear-gradient(top,  #cccccc 0%, #eeeeee 100%); 
+  background: -webkit-linear-gradient(top,  #cccccc 0%,#eeeeee 100%); 
+  background: linear-gradient(to bottom,  #cccccc 0%,#eeeeee 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cccccc', endColorstr='#eeeeee',GradientType=0 ); 
+}
+
+/* Select */
+/* -------------------------------------------------------- */
+.select-container select {
+  width: 100%;
+  padding: 5px;
+}
+  
+/* Separator */
+/* -------------------------------------------------------- */
+.separator {
+  width: 100%;
+  border-bottom: 1px solid gray;
+}
+
+/* Text input */
+/* -------------------------------------------------------- */
+.text-input label {
+  margin-bottom: 5px;
+}
+
+.text-input input {
+  width: 100%;
+  padding: 5px;
+}
+
+/* Spline */
+/* -------------------------------------------------------- */
+.spline-el span {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.spline-container {
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  background-color: #919191;
+  height: 100px;
+}

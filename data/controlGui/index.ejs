@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="style.css"/>
+</head>
+<body>
+	<ul class="group">
+		<p class="group-title">Quick Control</p>
+		<form action="/activateScreensaver">
+			<button class="button" type="submit" formmethod="post">Activate Screensaver</button>
+		</form>
+		<form action="/activateLastRecording">
+			<button class="button" type="submit" formmethod="post">Activate Last Recording</button>
+		</form>
+	</ul>
+	<ul class ="group">
+		<p class="group-title">Select Recording By Date</p>
+		<form enctype="application/x-www-form-urlencoded" action="/activateSelectedRecording">
+			<div class="select-container">
+				<select name="date_select">
+					<% dateLabels.forEach(function(date) { %>
+						<option value=<%=date%> ><%=date%></option>
+					<% }); %>
+				</select>
+			</div>
+			<button class="button" type="submit" formmethod="post">Activate Selected Recording</button>
+		</form>
+	<ul>
+	<ul class="group">
+		<p class="group-title">Viewer Settings</p>
+		<div class="slider" id="X">  
+			<div class="slider-container" onmousemove="drag(this, event)" onmousedown="dragStart(this, event)" onmouseup="dragEnd(this, event)">    
+				<div class="slider-fill" style="width: 50%;">      
+					<span class="slider-label no-select">X</span>    
+				</div>  
+			</div>  
+			<input type="test" class="slider-text-input no-select" value="0" pattern="[0-9]{10}" onchange="inputChange(this, event)">
+		</div>
+		<div class="slider" id="Y">  
+			<div class="slider-container" onmousemove="drag(this, event)" onmousedown="dragStart(this, event)" onmouseup="dragEnd(this, event)">    
+				<div class="slider-fill" style="width: 50%;">      
+					<span class="slider-label no-select">Y</span>    
+				</div>  
+			</div>  
+			<input type="test" class="slider-text-input no-select" value="0" pattern="[0-9]{10}" onchange="inputChange(this, event)">
+		</div>
+		<div class="slider" id="Width">  
+			<div class="slider-container" onmousemove="drag(this, event)" onmousedown="dragStart(this, event)" onmouseup="dragEnd(this, event)">    
+				<div class="slider-fill" style="width: 100%;">      
+					<span class="slider-label no-select">Width</span>    
+				</div>  
+			</div>  
+			<input type="test" class="slider-text-input no-select" value="0" pattern="[0-9]{10}" onchange="inputChange(this, event)">
+		</div>
+		<div class="slider" id="Height">  
+			<div class="slider-container" onmousemove="drag(this, event)" onmousedown="dragStart(this, event)" onmouseup="dragEnd(this, event)">    
+				<div class="slider-fill" style="width: =100%;">      
+					<span class="slider-label no-select">Height</span>    
+				</div>  
+			</div>  
+			<input type="test" class="slider-text-input no-select" value="0" pattern="[0-9]{10}" onchange="inputChange(this, event)">
+		</div>
+		<form action="/saveViewerSettings" enctype="application/x-www-form-urlencoded">
+			<input type="hidden" id="guiData" name="guiData"/>
+			<button class="button" type="submit" formmethod="post" onclick="createSettings()">Save Viewer Settings</button>
+		</form>
+	</ul>
+	<script>
+		var X = {
+			value: 0, 
+			min: -3840,
+			max: 3840,
+			name: "X",
+			selected: false
+		}
+		var Y = {
+			value: 0, 
+			min: -2160,
+			max: 2160,
+			name: "Y",
+			selected: false
+		}		
+		var Width = {
+			value: 1920, 
+			min: 0,
+			max: 3840,
+			name: "Width",
+			selected: false
+		}		
+		var Height = {
+			value: 1080, 
+			min: 0,
+			max: 2160,
+			name: "Height",
+			selected: false
+		}
+
+		var sliders = {};
+		sliders["X"] = X;
+		sliders["Y"] = Y;
+		sliders["Width"] = Width;
+		sliders["Height"] = Height;
+
+		var guiSettings;
+
+		function createSettings() {
+			var applicationSettings = {};
+			applicationSettings["Camera:0"] = {};
+			applicationSettings["Camera:0"]["X"] = sliders["X"].value;
+			applicationSettings["Camera:0"]["Y"] = sliders["Y"].value;
+			applicationSettings["Camera:0"]["Width"] = sliders["Width"].value;
+			applicationSettings["Camera:0"]["Height"] = sliders["Height"].value;
+			guiSettings = JSON.stringify(applicationSettings);
+			document.getElementById("guiData").value = guiSettings;
+			console.log(document.getElementById("guiData").value);
+		}
+
+		function inputChange(obj, e) {
+			// Get the correct slider object
+			var id = obj.parentElement.id;
+			var slider = sliders[id];
+			// get the slider container
+			var siblings = obj.parentElement.childNodes;
+			var sliderContainer;
+			siblings.forEach(function(node) {
+				if(node.className === "slider-container") 
+				{
+					sliderContainer = node;
+				}
+			});
+			// get the fill bar
+			var nodes = sliderContainer.childNodes;
+			var fill;
+			nodes.forEach(function(node) {
+				if(node.className === "slider-fill") 
+				{
+					fill = node;
+				}
+			});
+			var amount = obj.value;
+			if(amount > slider.max) {
+				amount = slider.max;
+			}
+			if(amount < slider.min) {
+				amount = slider.min;
+			}
+			obj.value = amount;
+			var pct = ((amount - slider.min) * 100) / (slider.max - slider.min);
+			fill.style.width = pct + "%";
+			slider.value = amount;
+			createSettings();
+		}
+
+		function drag(obj, e) {
+			if(e.which === 1) {
+				// Get the correct slider object
+				var id = obj.parentElement.id;
+				var slider = sliders[id];
+				// Get the fill bar
+				var nodes = obj.childNodes;
+				var fill;
+				nodes.forEach(function(node) {
+					if(node.className === "slider-fill") 
+					{
+						fill = node;
+					}
+				});
+				// Get the Text input
+				var siblings = obj.parentElement.childNodes;
+				var textInput;
+				siblings.forEach(function(node) {
+					if(node.className === "slider-text-input no-select") 
+					{
+						textInput = node;
+					}
+				});
+				if(slider.selected) {
+					var mouseX = e.clientX;
+					var width = obj.clientWidth;
+					var xPos = getPos(obj).x;
+					mouseX = mouseX - xPos;
+					var pct = mouseX / width * 100;
+					fill.style.width = pct + "%";
+					textInput.value = Math.round((slider.max - slider.min) * pct / 100 + slider.min);
+					slider.value = textInput.value;
+					createSettings();
+				}
+			}
+		}
+
+		function dragStart(obj, e) {
+			var id = obj.parentElement.id;
+			var slider = sliders[id];
+			slider.selected = true;
+			drag(obj, e);
+		}
+
+		function dragEnd(obj, e) {
+			var id = obj.parentElement.id;
+			var slider = sliders[id];
+			slider.selected = false;
+		}
+
+		function getPos(el) {
+		    for (var lx=0, ly=0;
+		         el != null;
+		         lx += el.offsetLeft, ly += el.offsetTop, el = el.offsetParent);
+		    return {x: lx,y: ly};
+		}
+	</script>
+</body>
+</html>
