@@ -1,1 +1,1 @@
-node sunriseController.js --schedule-recording-in-sec 5 --recording-camera-ip 192.168.1.71 --record-for-seconds 60
+node sunriseController.js --schedule-recording-in-sec 5 --recording-camera-ip 10.10.58.101 --record-for-seconds 60

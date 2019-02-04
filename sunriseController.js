@@ -309,7 +309,7 @@ function prepNextSunrise(date, data) {
 		// Sunrise today has not yet started so we can schedule our sunrise recordings.
 		console.log("Recording Offset: " + 1000 * recordingOffset)
 		sunriseDate.setTime(sunriseDate.getTime() - 1000 * recordingOffset)
-		console.log("Sunrise has not yet passed So the sunrise time minus " + recordingOffset + " minutes is: " + sunriseDate + "Scheduling a recording at that date and time")
+		console.log("Sunrise has not yet passed So the sunrise time minus " + recordingOffset + " seconds is: " + sunriseDate + "Scheduling a recording at that date and time")
 		scheduleRecording(sunriseDate, recordingsPath, recordingCameraIP, recordingDuration)
 		var recordingFinishedDate = new Date(sunriseDate)
 		recordingFinishedDate.setTime(recordingFinishedDate.getTime() + 1000 * 60 * 60 + 1000 * 60)
@@ -381,8 +381,6 @@ function getDateFromFolderLabel(label) {
 	var second 	= l[5]
 
 	var date = new Date(year+"-"+month+"-"+day+"T"+hour+":"+minute+":"+second)
-	// console.log("Date: " + date);
-	// console.log("Folder Label After: " + getFolderLabelFromDate(date));
 	return date
 }
 
