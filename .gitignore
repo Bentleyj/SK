@@ -4,3 +4,81 @@ node_modules/
 *.png
 *.jpg
 *.bin
+
+*
+!*.*
+!*/
+/bin/*  
+!/bin/data/   
+[Bb]uild/ 
+[Oo]bj/    
+*.o     
+[Dd]ebug*/   
+[Rr]elease*/   
+*.mode*  
+*.app/     
+*.pyc   
+.svn/   
+*.log
+node_modules/
+
+Stream*.txt       
+
+# Visual Studio
+*.sdf 
+*.opensdf 
+*.suo  
+*.pdb 
+*.ilk 
+*.aps  
+ipch/  
+
+# Thumbnails
+._*
+
+#Windows
+#Image file Caches
+Thumbs.db
+# Folder config file
+Desktop.ini
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+# Content
+*.mov
+*.mp3
+*.jpg
+*.png
+*.jpeg
+*.jpg
+*.gif
+*.avi
+*.mp4
+*.pdf
+*.bin
+
+# windows Forms
+packages/

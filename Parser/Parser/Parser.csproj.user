@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <StartArguments>--cam-ip 192.168.1.71 --duration 60 --data-path  data/recordings/22-1-2018.bin</StartArguments>
+  </PropertyGroup>
+</Project>
