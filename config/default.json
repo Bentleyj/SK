@@ -4,6 +4,7 @@
       "recordingsPath": "data/recordings",
       "storagePath": "C:/SunriseStorage",
       "screenshotPath": "C:/Images/",
+      "cameraIP": "10.10.58.101",
       "duration": 3600,
       "offset": 1800
     },
