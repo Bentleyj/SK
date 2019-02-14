@@ -2,6 +2,7 @@
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Timers;
 using System.Runtime.InteropServices;
 using System.Threading;
 using AxisMediaViewerLib;
@@ -12,6 +13,8 @@ namespace Viewer
     public partial class ViewerForm : Form
     {
         private static Thread renderThread;
+
+        private static System.Timers.Timer timer;
 
         private string videoDirPath = "";
         private string videoPath = "";
@@ -37,6 +40,17 @@ namespace Viewer
             renderThread = new Thread(new ParameterizedThreadStart(RenderThread));
             renderThread.SetApartmentState(ApartmentState.MTA);
             renderThread.Start(this.Handle);
+
+            timer = new System.Timers.Timer(8000);
+            timer.Interval = 2000;
+            timer.Elapsed += OnTimedEvent;
+            timer.AutoReset = true;
+            timer.Enabled = true;
+        }
+
+        private void OnTimedEvent(Object source, ElapsedEventArgs e)
+        {
+            Activate();
         }
 
         public void setWindowParametersFromCommandLineArguments(string[] args)

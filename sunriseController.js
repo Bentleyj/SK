@@ -208,18 +208,14 @@ function schedulePlayer(date, callback) {
 
 	var timeToStoreVideos = new Date();
 	timeToStoreVideos.setTime(timeToStoreVideos.getTime() - 1000 * 60 * 60 * 24 * 5);
-	console.log("Moving old files to storage")
-	moveOldFilesToStorage(recordingsPath, storagePath, timeToStoreVideos, function(date) {
-		if(date)
-			console.log("Moved recording from date: " + getFolderLabelFromDate(date) + ' to storage')
-	})
-	console.log("Finished Moving Old Files")
+	console.log("Deleting oldest videos in " + recordingsPath)
+	deleteOldestRecordingsInPlace(recordingsPath, 2)
 	var timeToDeleteVideos = new Date()
 	timeToDeleteVideos.setTime(timeToDeleteVideos.getTime() - 1000 * 60 * 60 * 24 * 30)
-	deleteOldFilesInStorage(storagePath, timeToDeleteVideos, function(date) {
-		if(date)
-			console.log("Deleted recording from date: " + date)
-	})
+	// deleteOldFilesInStorage(storagePath, timeToDeleteVideos, function(date) {
+	// 	if(date)
+	// 		console.log("Deleted recording from date: " + date)
+	// })
 	console.log(`Start Player Job: ${date}`)
 	return startPlayerJob
 };
@@ -421,7 +417,9 @@ function startRecorder(dataPath, cameraIP, recordDuration, callback) {
 }
 
 function sortRecordingDates(recPath, callback) {
+	console.log(recPath)
 	fs.readdir(recPath, function(err, files) {
+		console.log(recPath)
 		if(err) {
 			throw err
 		}
@@ -569,29 +567,50 @@ function copyFile(source, target, callback) {
 		}
 	}
 }
-
-function moveOldFilesToStorage(recPath, storagePath, moveBeforeThisDate, callback) {
+// moveOldFilesToStorage
+function moveOldestRecordingsToStorage(recPath, storagePath, maxRemainingRecordings, callback) {
 	sortRecordingDates(recPath, function(dates) {
 		if(dates == null) 
 			return
-		if(dates.size > 5) {
-			dates.forEach(function(date) {
-				if(date < moveBeforeThisDate) {
-					var folderDateLabel = getFolderLabelFromDate(date)
-					console.log("Found Old File: " + folderDateLabel)
-					var currentPath = recPath + "/" + folderDateLabel
-					var newPath = storagePath +"/" + folderDateLabel
-					fs.move(currentPath, newPath, { overwrite: true }, function(err) {
-						if(err) {
-							throw err
-						}
-					})
-					callback(date)
-				}
-				callback()
-			})
+		if(dates.length > 0) {
+			for(var i = dates.length-1; i > maxRemainingRecordings; i--) {
+				console.log(dates[i]);
+				var folderDateLabel = getFolderLabelFromDate(dates[i])
+				console.log("Found Old File: " + folderDateLabel)
+				var currentPath = recPath + "/" + folderDateLabel
+				var newPath = storagePath + "/" + folderDateLabel
+				fs.move(currentPath, newPath, { overwrite: true }, function(err) {
+					if(err) {
+						throw err
+					}
+				})
+				dates.pop()
+			}
 		}
+		callback()
+	})
+}
 
+function deleteOldestRecordingsInPlace(recPath, maxRemainingRecordings) {
+	sortRecordingDates(recPath, function(dates) {
+		if(dates == null) 
+			return
+		if(dates.length > 0) {
+			for(var i = dates.length-1; i >= maxRemainingRecordings; i--) {
+				console.log(dates[i])
+				console.log(getFolderLabelFromDate(dates[i]))
+				var folderDateLabel = getFolderLabelFromDate(dates[i])
+				console.log("deleteOldestRecordingsInPlace::Found Old File: " + folderDateLabel)
+				var path = recPath + "/" + folderDateLabel
+				fs.remove(path, function(err) {
+					if(err) {
+						console.log(err)
+					}
+					console.log("Successfully deleted: " + path)
+				})
+				dates.pop()
+			}
+		}
 	})
 }
 
@@ -607,7 +626,7 @@ function deleteOldFilesInStorage(storagePath, deleteBeforeThisDate, callback) {
 					if(err) {
 						console.log(err)
 					}
-				});
+				})
 				callback(date)
 			}
 			callback()
