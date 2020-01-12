@@ -224,7 +224,7 @@ namespace Viewer
                         int bufferSize = inFile.ReadInt32();
                         byte[] bufferBytes = inFile.ReadBytes(bufferSize);
                         // Check that it’s not an audio sample.
-                        if (sampleType != (int)AMV_VIDEO_SAMPLE_TYPE.AMV_VST_MPEG4_AUDIO)
+                        if (sampleType != (int)AMV_VIDEO_SAMPLE_TYPE.AMV_VST_MPEG4_AUDIO && bufferSize > 0)
                         {
                             // Let the viewer render the frame
                             viewer.RenderVideoSample(sampleFlags, startTime, stopTime, bufferBytes);
