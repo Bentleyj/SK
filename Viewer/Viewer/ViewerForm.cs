@@ -162,7 +162,7 @@ namespace Viewer
                 Console.WriteLine("Video Width has not been initialized, or has been given a negative value. Setting default value: 1920");
                 VideoWidth = 3840;
             }
-            if (VideoWidth < 0)
+            if (VideoHeight < 0)
             {
                 Console.WriteLine("Video Height has not been initialized, or has been given a negative value. Setting default value: 1080");
                 VideoHeight = 2160;

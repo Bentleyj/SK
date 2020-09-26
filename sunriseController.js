@@ -174,8 +174,7 @@ function scheduleRecordingUsingCommandLineArguments(opts) {
 
 /* Using the sunrise table files to schedule a new recording. */
 function scheduleRecordingUsingSunriseTables() {
-	var year = new Date().getFullYear()
-	parseDateFile("data/sunriseTables/"+year+".txt", function(data) {
+	parseDateFile("data/sunriseTables/2019.txt", function(data) {
 		var today = new Date()
 		prepNextSunrise(today, data)
 	})
@@ -314,8 +313,7 @@ function prepNextSunrise(date, data) {
 		scheduleScreenshots(screenshotStartDate, screenshotEndDate, 30, playerX, playerY, playerWidth + playerX, playerHeight + playerY, screenshotPath + getFolderLabelFromDate(recordingFinishedDate) + ".png")
 		schedulePlayer(recordingFinishedDate, function() {
 			playMostRecentRecording(recordingsPath, function() {
-				var year = new Date().getFullYear()
-				parseDateFile("data/sunriseTables/"+year+".txt", function(data) {
+				parseDateFile("data/sunriseTables/2019.txt", function(data) {
 					var today = new Date()
 					prepNextSunrise(today, data)
 				})
