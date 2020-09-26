@@ -6,4 +6,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <StartArguments>--data-path recordings/ --window-x 0 --window-y 0 --window-width 1920 --window-height 1080 --video-x 0 --video-y 0 --video-width 3840 --video-height 2160</StartArguments>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <StartArguments>--data-path recordings/ --window-x 0 --window-y 0 --window-width 1920 --window-height 1080 --video-x 0 --video-y 0 --video-width 3840 --video-height 2160</StartArguments>
+  </PropertyGroup>
 </Project>

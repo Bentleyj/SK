@@ -41,15 +41,6 @@ namespace Viewer
             renderThread.SetApartmentState(ApartmentState.MTA);
             renderThread.Start(this.Handle);
 
-            timer = new System.Timers.Timer(8000);
-            timer.Interval = 2000;
-            timer.Elapsed += OnTimedEvent;
-            timer.AutoReset = true;
-            timer.Enabled = true;
-        }
-
-        private void OnTimedEvent(Object source, ElapsedEventArgs e)
-        {
             Activate();
         }
 
