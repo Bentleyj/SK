@@ -44,15 +44,6 @@ namespace Viewer
             m_renderThread.Abort();
         }
 
-        public void startRenderThread()
-        {
-            // Create a thread for rendering the video content.
-            m_renderThread = new Thread(new ParameterizedThreadStart(RenderThread));
-            m_renderThread.SetApartmentState(ApartmentState.MTA);
-
-            m_renderThread.Start(this.Handle);
-        }
-
         public void setWindowParametersFromCommandLineArguments(string[] args)
         {
             // Look at our arguments
@@ -181,7 +172,7 @@ namespace Viewer
 
                         try
                         {
-                            viewer.Init(1, mediaTypeBuffer, hWnd.ToInt64());
+                            viewer.Init(0, mediaTypeBuffer, hWnd.ToInt64());
                         }
                         catch (Exception e)
                         {
@@ -233,6 +224,15 @@ namespace Viewer
             // If we have no or multiple videos so we need to exit now.
             Console.WriteLine("There were " + files.Length + " videos in the specified video directory: " + videoDirPath + " Selecting First one: " + files[0]);
             throw new Exception("No files found");
+        }
+
+        private void ViewerForm_Load(object sender, EventArgs e)
+        {
+            // Create a thread for rendering the video content.
+            m_renderThread = new Thread(new ParameterizedThreadStart(RenderThread));
+            m_renderThread.SetApartmentState(ApartmentState.MTA);
+
+            m_renderThread.Start(this.Handle);
         }
     }
 }

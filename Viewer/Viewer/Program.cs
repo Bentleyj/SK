@@ -22,7 +22,6 @@ namespace Viewer
                 try
                 {
                     viewerForm.setWindowParametersFromCommandLineArguments(args);
-                    viewerForm.startRenderThread();
                     Application.Run(viewerForm);
                 }
                 catch (Exception e)

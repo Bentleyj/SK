@@ -38,6 +38,7 @@
             this.Name = "ViewerForm";
             this.Text = "Form1";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ViewerForm_FormClosed);
+            this.Load += new System.EventHandler(this.ViewerForm_Load);
             this.ResumeLayout(false);
 
         }
