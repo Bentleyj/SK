@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Viewer
 {
@@ -16,9 +14,23 @@ namespace Viewer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            ViewerForm vf = new ViewerForm();
-            vf.setWindowParametersFromCommandLineArguments(args);
-            Application.Run(vf);
+            using (StreamWriter writer = new StreamWriter("console.txt"))
+            {
+                Console.SetOut(writer);
+                Console.WriteLine("Test line");
+                ViewerForm viewerForm = new ViewerForm();
+                try
+                {
+                    viewerForm.setWindowParametersFromCommandLineArguments(args);
+                    viewerForm.startRenderThread();
+                    Application.Run(viewerForm);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Got Exception running render thread: {0} exiting", e);
+                    Application.Exit();
+                }
+            }
         }
     }
 }

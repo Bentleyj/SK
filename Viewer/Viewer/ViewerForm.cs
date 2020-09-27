@@ -2,32 +2,26 @@
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
-using System.Timers;
-using System.Runtime.InteropServices;
 using System.Threading;
 using AxisMediaViewerLib;
-using Newtonsoft.Json.Linq;
 
 namespace Viewer
 {
     public partial class ViewerForm : Form
     {
-        private static Thread renderThread;
+        private static Thread m_renderThread;
 
-        private static System.Timers.Timer timer;
+        private string m_videoPath = "";
 
-        private string videoDirPath = "";
-        private string videoPath = "";
+        private int m_windowXPos = 0;
+        private int m_windowYPos = 0;
+        private int m_windowWidth = 3840;
+        private int m_windowHeight = 2160;
 
-        private int WindowXPos = 0;
-        private int WindowYPos = 0;
-        private int WindowWidth = -1;
-        private int WindowHeight = -1;
-
-        private static int VideoXPos = 0;
-        private static int VideoYPos = 0;
-        private static int VideoWidth = -1;
-        private static int VideoHeight = -1;
+        private static int m_videoXPos = 0;
+        private static int m_videoYPos = 0;
+        private static int m_videoWidth = 3840;
+        private static int m_videoHeight = 2160;
 
         public ViewerForm()
         {
@@ -36,196 +30,194 @@ namespace Viewer
             // set the border style, position and size  of the form
             FormBorderStyle = FormBorderStyle.None;
 
-            // Create a thread for rendering the video content.
-            renderThread = new Thread(new ParameterizedThreadStart(RenderThread));
-            renderThread.SetApartmentState(ApartmentState.MTA);
-            renderThread.Start(this.Handle);
+            Console.WriteLine("Test Output");
 
             Activate();
         }
 
+        ~ViewerForm()
+        {
+            m_renderThread.Abort();
+        }
+        private void ViewerForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            m_renderThread.Abort();
+        }
+
+        public void startRenderThread()
+        {
+            // Create a thread for rendering the video content.
+            m_renderThread = new Thread(new ParameterizedThreadStart(RenderThread));
+            m_renderThread.SetApartmentState(ApartmentState.MTA);
+
+            m_renderThread.Start(this.Handle);
+        }
+
         public void setWindowParametersFromCommandLineArguments(string[] args)
         {
-            for (int i = 0; i < args.Length; i++)
-            {
-                Console.WriteLine(args[i]);
-            }
             // Look at our arguments
             for (int i = 0; i < args.Length; i++)
             {
+                Console.WriteLine("Found argument: {0}", args[i]);
+
                 // Check if we are recieving the name of an argument
                 if (args[i].Substring(0, 2) == "--")
                 {
                     // We got a real argument!
                     switch (args[i])
                     {
-                        case "--data-path":
-                            videoDirPath = args[++i];
-                            break;
-                        case "--window-x":
-                            if (!int.TryParse(args[++i], out WindowXPos))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                WindowXPos = 0;
-                            }
-                            break;
-                        case "--window-y":
-                            if(!int.TryParse(args[++i], out WindowYPos))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                WindowYPos = 0;
-                            }
-                            break;
-                        case "--window-width":
-                            if (!int.TryParse(args[++i], out WindowWidth))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                WindowWidth = 1920;
-                            }
-                            break;
-                        case "--window-height":
-                            if (!int.TryParse(args[++i], out WindowHeight))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                WindowHeight = 1080;
-                            }
-                            break;
-                        case "--video-width":
-                            if (!int.TryParse(args[++i], out VideoWidth))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                VideoWidth = 1920;
-                            }
-                            break;
-                        case "--video-height":
-                            if (!int.TryParse(args[++i], out VideoHeight))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                VideoWidth = 1080;
-                            }
-                            break;
-                        case "--video-x":
-                            if (!int.TryParse(args[++i], out VideoXPos))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                VideoXPos = 0;
-                            }
-                            break;
-                        case "--video-y":
-                            if (!int.TryParse(args[++i], out VideoYPos))
-                            {
-                                Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
-                                VideoYPos = 0;
-                            }
-                            break;
-                        default:
-                            Console.WriteLine("Unknown Command: " + args[i] + " With argument: " + args[++i]);
-                            break;
+                    case "--data-path":
+                        m_videoPath = getVideoFilePathFromVideoDirPath(args[++i]);
+                        break;
+                    case "--window-x":
+                        if (!int.TryParse(args[++i], out m_windowXPos))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--window-y":
+                        if(!int.TryParse(args[++i], out m_windowYPos))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--window-width":
+                        if (!int.TryParse(args[++i], out m_windowWidth))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--window-height":
+                        if (!int.TryParse(args[++i], out m_windowHeight))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--video-x":
+                        if (!int.TryParse(args[++i], out m_videoXPos))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--video-y":
+                        if (!int.TryParse(args[++i], out m_videoYPos))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--video-width":
+                        if (!int.TryParse(args[++i], out m_videoWidth))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    case "--video-height":
+                        if (!int.TryParse(args[++i], out m_videoHeight))
+                        {
+                            Console.WriteLine("Failed to parse: " + args[i] + " to integer, default set");
+                        }
+                        break;
+                    default:
+                        Console.WriteLine("Unknown Command: " + args[i] + " With argument: " + args[++i]);
+                        break;
                     }
                 }
                 else
                 {
                     // We did not get a real argument!
-                    Console.WriteLine("Malformed Command: " + args[i] + ",\n Arguments must be preceded by -- and succeeded by their argument");
+                    Console.WriteLine("Malformed Command: " + args[i] + ",\n Arguments must be preceded by -- and succeeded by their value");
                 }
             }
 
-            setWindowParameters();
-            setDataParameters();
-
-            if(videoPath == "")
-            {
-                Console.WriteLine("Invalid video path, no video found within video directory {0} exiting...", videoDirPath);
-                Environment.Exit(1);
-            }
-            if(WindowWidth < 0)
-            {
-                Console.WriteLine("Window Width has not been initialized, or has been given a negative value. Setting default value: 1920");
-                WindowWidth = 3840;
-            }
-            if (WindowHeight < 0)
-            {
-                Console.WriteLine("Window Height has not been initialized, or has been given a negative value. Setting default value: 1080");
-                WindowHeight = 2160;
-            }
-            if (VideoWidth < 0)
-            {
-                Console.WriteLine("Video Width has not been initialized, or has been given a negative value. Setting default value: 1920");
-                VideoWidth = 3840;
-            }
-            if (VideoHeight < 0)
-            {
-                Console.WriteLine("Video Height has not been initialized, or has been given a negative value. Setting default value: 1080");
-                VideoHeight = 2160;
-            }
-        }
-
-        private void setWindowParameters()
-        {
-            Location = new System.Drawing.Point(WindowXPos, WindowYPos);
-            ClientSize = new System.Drawing.Size(WindowWidth, WindowHeight);
-        }
-
-        private void setDataParameters()
-        {
-            videoPath = getVideoFilePathFromVideoDirPath(videoDirPath);
+            Location = new System.Drawing.Point(m_windowXPos, m_windowYPos);
+            ClientSize = new System.Drawing.Size(m_windowWidth, m_windowHeight);
         }
 
         void RenderThread(object obj)
         {
-            IntPtr hWnd = (IntPtr)obj;
-
-            while (true)
+            using (StreamWriter writer = new StreamWriter("consoleThread.txt"))
             {
-                AxisMediaViewer viewer = new AxisMediaViewer();
-                viewer.VMR9 = true;
-
-                FileStream inFileStream = new FileStream(videoPath, FileMode.Open);
-                BinaryReader inFile = new BinaryReader(inFileStream, Encoding.UTF32);
-                if (inFile.PeekChar() != -1)
+                Console.SetOut(writer);
+                try
                 {
+                    renderThreadDoUpdate(obj);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                    Application.Exit();
+                }
+            }
+        }
+
+        void renderThreadDoUpdate(object obj)
+        {
+            if (!File.Exists(m_videoPath))
+            {
+                Console.WriteLine("startRenderThread: Could not find file {0}, exiting", m_videoPath);
+                throw new Exception("File Not Found");
+            }
+
+            using (FileStream inFileStream = new FileStream(m_videoPath, FileMode.Open, FileAccess.Read))
+            {
+                using (BinaryReader inFile = new BinaryReader(inFileStream, Encoding.UTF32))
+                {
+                    if (inFile.PeekChar() == -1)
+                    {
+                        Console.WriteLine("startRenderThread: file {0} is empty, exiting", m_videoPath);
+                        throw new Exception("File is Empty");
+                    }
+
+                    IntPtr hWnd = (IntPtr)obj;
                     int mediaTypeSize = inFile.ReadInt32();
                     byte[] mediaTypeBuffer = inFile.ReadBytes(mediaTypeSize);
+                    long headerOffset = inFileStream.Position; // save the width of the header so we don't read it again.
 
-                    try
+                    while (true)
                     {
-                        viewer.Init(1, mediaTypeBuffer, hWnd.ToInt64());
-                    }
-                    catch(Exception e)
-                    {
-                        Console.WriteLine("Got Exception:\n" + e);
-                        viewer.VMR9 = false;
-                        viewer.Init(1, mediaTypeBuffer, hWnd.ToInt64());
-                    }
 
-                    viewer.SetVideoPosition(VideoXPos, VideoYPos, VideoXPos + VideoWidth, VideoYPos + VideoHeight);
+                        AxisMediaViewer viewer = new AxisMediaViewer();
+                        viewer.VMR9 = true;
 
-
-                    viewer.Start();
-
-                    Console.WriteLine("Status: " + viewer.Status);
-
-                    while (inFile.PeekChar() != -1)
-                    {
-                        // Read frame data
-                        int sampleType = inFile.ReadInt32();
-                        int sampleFlags = inFile.ReadInt32();
-                        ulong startTime = inFile.ReadUInt64();
-                        ulong stopTime = inFile.ReadUInt64();
-                        int bufferSize = inFile.ReadInt32();
-                        byte[] bufferBytes = inFile.ReadBytes(bufferSize);
-                        // Check that it’s not an audio sample.
-                        if (sampleType != (int)AMV_VIDEO_SAMPLE_TYPE.AMV_VST_MPEG4_AUDIO && bufferSize > 0)
+                        try
                         {
-                            // Let the viewer render the frame
-                            viewer.RenderVideoSample(sampleFlags, startTime, stopTime, bufferBytes);
+                            viewer.Init(1, mediaTypeBuffer, hWnd.ToInt64());
                         }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine("Got Exception initializing player: {0} exiting", e);
+                            throw new Exception("Failed to Initialize Player");
+                        }
+
+                        viewer.SetVideoPosition(m_videoXPos, m_videoYPos, m_videoXPos + m_videoWidth, m_videoYPos + m_videoHeight);
+                        viewer.Start();
+
+                        while (inFile.PeekChar() != -1)
+                        {
+                            // Read frame data
+                            int sampleType = inFile.ReadInt32();
+                            int sampleFlags = inFile.ReadInt32();
+                            ulong startTime = inFile.ReadUInt64();
+                            ulong stopTime = inFile.ReadUInt64();
+                            int bufferSize = inFile.ReadInt32();
+                            byte[] bufferBytes = inFile.ReadBytes(bufferSize);
+
+                            if (sampleType != (int)AMV_VIDEO_SAMPLE_TYPE.AMV_VST_MPEG4_AUDIO && bufferSize > 0)
+                            {
+                                try
+                                {
+                                    viewer.RenderVideoSample(sampleFlags, startTime, stopTime, bufferBytes);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.WriteLine("Caught Exception {0} when trying to render frame.", e);
+                                }
+                            }
+                        }
+
+                        inFileStream.Position = headerOffset;
+                        viewer.Stop();
                     }
-
-                    viewer.Stop();
-
-                    inFileStream.Close();
-                    inFile.Close();
                 }
             }
         }
@@ -240,7 +232,7 @@ namespace Viewer
             }
             // If we have no or multiple videos so we need to exit now.
             Console.WriteLine("There were " + files.Length + " videos in the specified video directory: " + videoDirPath + " Selecting First one: " + files[0]);
-            return files[0];
+            throw new Exception("No files found");
         }
     }
 }
