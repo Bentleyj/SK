@@ -17,7 +17,6 @@ namespace Viewer
             using (StreamWriter writer = new StreamWriter("console.txt"))
             {
                 Console.SetOut(writer);
-                Console.WriteLine("Test line");
                 ViewerForm viewerForm = new ViewerForm();
                 try
                 {
