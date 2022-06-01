@@ -27,6 +27,6 @@
     "nodemailer": "^4.6.4",
     "pm2": "^2.10.3",
     "screenshot-desktop": "^1.4.2",
-    "sharp": "^0.20.5"
+    "sharp": "^0.30.5"
   }
 }
