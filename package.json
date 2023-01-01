@@ -18,7 +18,7 @@
   "homepage": "https://github.com/Hellicar-Studio/SunriseKingdomController#readme",
   "dependencies": {
     "body-parser": "^1.18.2",
-    "config": "^1.30.0",
+    "config": "^3.3.8",
     "ejs": "^2.5.9",
     "express": "^4.16.3",
     "fs-extra": "^6.0.0",
